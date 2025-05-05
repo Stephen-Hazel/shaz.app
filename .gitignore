@@ -1,0 +1,7 @@
+.htaccess
+dbg.txt
+*/.htaccess
+*/error_log
+*/dbg.txt
+pic/pic
+song/song
