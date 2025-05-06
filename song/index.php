@@ -25,7 +25,7 @@ require_once ("../_inc/app.php");
 ?>
  <style>
 audio { vertical-align: bottom; }
-td    { width: vw; }
+td    { max-width: 100%; }
  </style>
  <script> // ___________________________________________________________________
 let   did = <?= json_encode ($did); ?>;     // songs played (for PROPER shuffle)
