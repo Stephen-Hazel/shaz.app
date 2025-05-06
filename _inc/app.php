@@ -228,7 +228,7 @@ function table1 ($id, $hdr, $row)
 // table w only 1 column
 {  echo
 "<table id='$id' name='$id'>\n" .
-" <thead><tr><td><b>$hdr</b></td></tr></thead>\n" .
+" <thead><tr><th><b>$hdr</b></th></tr></thead>\n" .
 " <tbody>\n";
    foreach ($row as $r => $ro)  echo
 "  <tr id='$id$r'><td>$ro</td></tr>\n";
