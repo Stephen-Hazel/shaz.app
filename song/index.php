@@ -21,31 +21,25 @@ require_once ("../_inc/app.php");
    if ($shuf == 'Y') shuffle ($pl);   else sort ($pl);
 
    $PG = "song";
-   pg_head ("jqui app", "jqui app ".
-      "https://cdnjs.cloudflare.com/ajax/libs/castjs/5.3.0/cast.min.js");
+   pg_head ("jqui app", "jqui app ");
 ?>
  <style>
-google-cast-launcher {
-   float:  left;
-   height: 45px;
-}
-google-cast-launcher:hover {
-   --disconnected-color: white;
-   --connected-color:    white;
-
-}
-audio {
-   vertical-align: bottom;
-}
+audio { vertical-align: bottom; }
+td    { width: vw; }
  </style>
- <script> // ____________________________________________________________________
-const pl = <?= json_encode ($pl); ?>;  // play list
-let   tr = 0, au;                      // track we're on, audio element
-let   did = [];                        // songs we played (for PROPER shuffle)
-const cast = new Castjs ();
+ <script> // ___________________________________________________________________
+let   did = <?= json_encode ($did); ?>;     // songs played (for PROPER shuffle)
+const pl  = <?= json_encode ($pl);  ?>;     // play list
+let   tr  = 0, au;                     // track we're on, audio element
 
 function redo (x = '')                 // get which dirs are picked n refresh
-{ let pick = [];
+{
+// fetch ("put_did.php", {
+//    method:  'POST',
+//    headers: { 'Content-Type': 'application/json' },
+//    body:    JSON.stringify ({text: did.join ("\n"), filename: "did.txt"})
+// });
+  let pick = [];
    all ("[id^='chk']:checked").forEach (chk => {
       pick.push (chk.id.substr (3));
    });
@@ -60,7 +54,7 @@ function play (newtr, go = 'y')
 {  au.pause ();                        // shush, unhilite old one
    el ('info'+tr).style = '';
   const ofn = pl [tr];                 // tack it onto did[]
-// if (! did.includes (ofn))  did.push (ofn);
+   if (! did.includes (ofn))  did.push (ofn);
 
    tr = newtr;   if (tr < 0)  tr = 0;
    if (tr >= pl.length)  return;
@@ -70,55 +64,6 @@ function play (newtr, go = 'y')
 
    el ('info'+tr).style = "background-color:#FFFF80;";
    if (go == 'y')  au.play ();
-/*
-     let ses = cast.framework.CastContext.getInstance ().getCurrentSession ();
-dbg(ses);
-      if (typeof ses === 'undefined') {
-dbg("no session");
-         return;
-      }
-     let mIn = new chrome.cast.media.MediaInfo ('song/'+fn, 'audio/mpeg');
-     let lRq = new chrome.cast.media.LoadRequest (mIn);
-dbg('song/'+fn);
-      ses.loadMedia (lRq).then (
-         function ()  {
-dbg("loaded ok");
-                      },
-         function (e) { dbg("load error", e); }
-      );
-   }
-*/
-}
-
-function PlPa ()
-{ let player = new cast.framework.RemotePlayer ();
-dbg(player);
-dbg("canPause="+player.canPause);
-  let ctl    = new cast.framework.RemotePlayerController (player);
-dbg(ctl);
-   ctl.playOrPause ();
-dbg("ok ?");
-   ctl.addEventListener(
-      cast.framework.RemotePlayerEventType.MEDIA_INFO_CHANGED, function() {
-      // Use the current session to get an up to date media status.
-        let session = cast.framework.CastContext.getInstance()
-                                                       .getCurrentSession();
-dbg("session");
-dbg(session);
-         if (! session)  return;
-
-      // Contains information about the playing media including currentTime.
-        let mediaStatus = session.getMediaSession();
-dbg("mediaStatus");
-dbg(mediaStatus);
-         if (!mediaStatus)  return;
-
-      // mediaStatus also contains the mediaInfo containing metadata and other
-      // information about the in progress content.
-        let mediaInfo = mediaStatus.media;
-dbg("mediaInfo");
-dbg(mediaInfo);
-     });
 }
 
 function prev ()  {play (tr-1);}
@@ -137,51 +82,17 @@ function move ()                       // move song to new dir n refresh
         t = $('#to').val ();
    redo ('&fr=' + f + '&to=' + t);
 }
-/*
-function loadMedia (session, src)
-{ const mInfo = new chrome.cast.media.MediaInfo (src, 'audio/mpeg');
-  const rqst  = new chrome.cast.media.LoadRequest (mInfo);
-   session.loadMedia (rqst).then (() => {
-      console.log ('Media loaded successfully.');
-   },
-   (errorCode) => {
-      console.error ('Error loading media: ', errorCode);
-   });
-}
-
-function castAudio ()
-{ const sess =
-      cast.framework.CastContext.getInstance ().getCurrentSession ();
-   if (sess)  loadMedia (sess, au.src);
-   else {
-      cast.framework.CastContext.getInstance ().requestSession ().then (
-         (session) => {
-            loadMedia (session, au.src);
-         },
-         () => {
-            console.error ("Failed to start cast session.");
-         }
-      );
-   }
-}
-*/
-
-function castAudio ()
-{  if (cast.available)  cast.session (pl [0]);
-}
 
 $(function () {                        // boot da page
    navInit ()
    $('a').button ();
 
    au = el ('audio');
-// au.volume = 0.2;
+   au.volume = 0.2;
 
    $('input').checkboxradio ().click (chk);
    $('#prev').button ().click (prev);
    $('#next').button ().click (next);
-
-   $('#plpa').button ().click (PlPa);
 
    $('#lyr' ).button ().click (lyr );
    $('#move').button ().click (move);
@@ -192,13 +103,10 @@ $(function () {                        // boot da page
 
    au.addEventListener ('ended', () => { next (); });
    play (0, 'n');
-
-   $("#bcast").button ().click (castAudio);
 });
  </script>
-<? pg_body (); ?>
-<button id="bcast">cast</button>
-<? check ('shuf', 'shuffle', $shuf);   echo " &nbsp; &nbsp;\n";
+<? pg_body ();
+   check ('shuf', 'shuffle', $shuf);   echo " &nbsp; &nbsp;\n";
    foreach ($dir as $i => $s)  check ("chk$i", $s, in_array ($i, $pick)?'Y':'');
 ?>
 <br>
