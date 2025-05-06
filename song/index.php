@@ -25,12 +25,12 @@ require_once ("../_inc/app.php");
 ?>
  <style>
 audio { vertical-align: bottom; }
-table { max-width: 100%; }
-thead { max-width: 100%; }
-tbody { max-width: 100%; display: block; height: 20em; overflow: auto; }
-tr    { max-width: 100%; }
-th    { max-width: 100%; position: sticky; top: 0; }
-td    { max-width: 100%; }
+table { max-width: 100%; overflow: hidden; }
+thead { max-width: 100%; overflow: hidden; }
+tbody { max-width: 100%; overflow: hidden; display: block; height: 20em; }
+tr    { max-width: 100%; overflow: hidden; }
+th    { max-width: 100%; overflow: hidden; position: sticky; top: 0; }
+td    { max-width: 100%; overflow: hidden; }
  </style>
  <script> // ___________________________________________________________________
 let   did = <?= json_encode ($did); ?>;     // songs played (for PROPER shuffle)
