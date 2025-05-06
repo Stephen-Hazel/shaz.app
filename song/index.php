@@ -21,7 +21,7 @@ require_once ("../_inc/app.php");
    if ($shuf == 'Y') shuffle ($pl);   else sort ($pl);
 
    $PG = "song";
-   pg_head ("jqui app", "jqui app ");
+   pg_head ("jqui app", "jqui app");
 ?>
  <style>
 audio { vertical-align: bottom; }
