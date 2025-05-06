@@ -25,7 +25,8 @@ require_once ("../_inc/app.php");
 ?>
  <style>
 audio { vertical-align: bottom; }
-tbody { display: block; height: 12em; overflow: auto; }
+tbody { max-width: 100%; display: block; height: 12em; overflow: auto; }
+tr    { max-width: 100%; }
 th    { max-width: 100%; position: sticky; top: 0; }
 td    { max-width: 100%; }
  </style>
