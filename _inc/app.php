@@ -231,7 +231,7 @@ function table1 ($id, $hdr, $row)
 " <thead><tr><th><b>$hdr</b></th></tr></thead>\n" .
 " <tbody>\n";
    foreach ($row as $r => $ro)  echo
-"  <tr id='$id$r'><td>$ro</td></tr>\n";
+"  <tr id='$id$r'><td title='$ro'>$ro</td></tr>\n";
    echo
 " </tbody>\n" .
 "</table>\n";

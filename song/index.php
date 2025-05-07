@@ -25,12 +25,9 @@ require_once ("../_inc/app.php");
 ?>
  <style>
 audio { vertical-align: bottom; }
-table { max-width: 100%; overflow: hidden; }
-thead { max-width: 100%; overflow: hidden; }
-tbody { max-width: 100%; overflow: hidden; display: block; height: 20em; }
-tr    { max-width: 100%; overflow: hidden; }
-th    { max-width: 100%; overflow: hidden; position: sticky; top: 0; }
-td    { max-width: 100%; overflow: hidden; }
+table { max-width: 100%; border-collapse: collapse; }
+tbody { display: block; height: 20em; overflow-y: scroll; }
+td    { overflow: hidden; white-space: nowrap; max-width: 680px; }
  </style>
  <script> // ___________________________________________________________________
 let   did = <?= json_encode ($did); ?>;     // songs played (for PROPER shuffle)
@@ -111,7 +108,7 @@ $(function () {                        // boot da page
 });
  </script>
 <? pg_body ();
-   check ('shuf', 'shuffle', $shuf);   echo " &nbsp; &nbsp;\n";
+   check ('shuf', 'shuffle', $shuf);   echo " &nbsp; &nbsp; \n";
    foreach ($dir as $i => $s)  check ("chk$i", $s, in_array ($i, $pick)?'Y':'');
 ?>
 <br>
