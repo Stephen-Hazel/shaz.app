@@ -87,7 +87,7 @@ $(function () {                        // boot da page
 
    $('#lyr' ).button ().click (lyr );
    $('#move').button ().click (move);
-   $('#to'  ).selectmenu ({ width: 160 });
+   $('#to'  ).selectmenu ({ width: 100 });
    all ('table tbody tr').forEach (tr => {
       tr.addEventListener ('click', () => {
          shush ();
