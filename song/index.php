@@ -10,8 +10,7 @@ require_once ("../_inc/app.php");
    if (($fr != '') && ($to != ''))  system ("mv song/$fr song/$to");
 
    $dir = LstDir ("song", 'd');   sort ($dir);
-// $did = explode ("\n", Get ("did.txt"));
-   $did = [];
+   $did = explode ("\n", Get ("did.txt"));
 
    $pl = [];
    foreach ($dir as $i => $d)  if (in_array ($i, $pick)) {
@@ -30,18 +29,11 @@ tbody { display: block; height: 20em; overflow-y: scroll; }
 td    { overflow: hidden; white-space: nowrap; max-width: 680px; }
  </style>
  <script> // ___________________________________________________________________
-let   did = <?= json_encode ($did); ?>;     // songs played (for PROPER shuffle)
-const pl  = <?= json_encode ($pl);  ?>;     // play list
-let   tr  = 0, au;                     // track we're on, audio element
+const pl = <?= json_encode ($pl); ?>;  // play list
+let   tr = 0, au;                      // track we're on, audio element
 
 function redo (x = '')                 // get which dirs are picked n refresh
-{
-// fetch ("put_did.php", {
-//    method:  'POST',
-//    headers: { 'Content-Type': 'application/json' },
-//    body:    JSON.stringify ({text: did.join ("\n"), filename: "did.txt"})
-// });
-  let pick = [];
+{ let pick = [];
    all ("[id^='chk']:checked").forEach (chk => {
       pick.push (chk.id.substr (3));
    });
@@ -52,13 +44,10 @@ function redo (x = '')                 // get which dirs are picked n refresh
 
 function chk ()  {redo ();}
 
-function play (newtr, go = 'y')
-{  au.pause ();                        // shush, unhilite old one
-   el ('info'+tr).style = '';
-  const ofn = pl [tr];                 // tack it onto did[]
-   if (! did.includes (ofn))  did.push (ofn);
+function shush ()  {au.pause ();   el ('info'+tr).style = '';}
 
-   tr = newtr;   if (tr < 0)  tr = 0;
+function play (go = 'y')
+{  if (tr < 0)  tr = 0;
    if (tr >= pl.length)  return;
 
   const fn = pl [tr];
@@ -68,8 +57,8 @@ function play (newtr, go = 'y')
    if (go == 'y')  au.play ();
 }
 
-function prev ()  {play (tr-1);}
-function next ()  {play (tr+1);}
+function prev ()  {shush ();   --tr;   play ();}
+function next ()  {shush ();   ++tr;   play ();}
 
 function lyr ()                        // hit google lookin fo lyrics
 { let s = pl [tr];
@@ -100,15 +89,23 @@ $(function () {                        // boot da page
    $('#move').button ().click (move);
    $('#to'  ).selectmenu ({ width: 160 });
    all ('table tbody tr').forEach (tr => {
-      tr.addEventListener ('click', function () { play (this.rowIndex-1); });
+      tr.addEventListener ('click', () => {
+         shush ();
+         tr = this.rowIndex-1;
+         play ();
+      });
    });
-
-   au.addEventListener ('ended', () => { next (); });
-   play (0, 'n');
+   au.addEventListener ('ended', () => {
+      shush ();
+      $.get ("did.php", { did: pl [tr] });
+      pl.splice (tr, 1);               // outa theeere
+      play ();
+   });
+   play ('n');
 });
  </script>
 <? pg_body ();
-   check ('shuf', 'shuffle', $shuf);   echo " &nbsp; &nbsp; \n";
+   check ('shuf', 'shuf', $shuf);   echo " &nbsp; &nbsp; \n";
    foreach ($dir as $i => $s)  check ("chk$i", $s, in_array ($i, $pick)?'Y':'');
 ?>
 <br>
