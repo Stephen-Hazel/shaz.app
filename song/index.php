@@ -26,7 +26,7 @@ require_once ("../_inc/app.php");
 audio { vertical-align: bottom; }
 table { max-width: 100%; border-collapse: collapse; }
 tbody { display: block; height: 20em; overflow-y: scroll; }
-td    { overflow: hidden; white-space: nowrap; max-width: 680px; }
+td    { overflow: hidden; white-space: nowrap; max-width: 320px; }
  </style>
  <script> // ___________________________________________________________________
 const pl = <?= json_encode ($pl); ?>;  // play list
@@ -79,7 +79,7 @@ $(function () {                        // boot da page
    $('a').button ();
 
    au = el ('audio');
-   au.volume = 0.2;
+// au.volume = 0.2;
 
    $('input').checkboxradio ().click (chk);
    $('#prev').button ().click (prev);
@@ -88,10 +88,12 @@ $(function () {                        // boot da page
    $('#lyr' ).button ().click (lyr );
    $('#move').button ().click (move);
    $('#to'  ).selectmenu ({ width: 100 });
-   all ('table tbody tr').forEach (tr => {
-      tr.addEventListener ('click', () => {
+   all ('table tbody tr').forEach (tro => {
+      tro.addEventListener ('click', function () {
          shush ();
+dbg("tr", tr);
          tr = this.rowIndex-1;
+dbg("trnew", tr);
          play ();
       });
    });
