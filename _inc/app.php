@@ -114,8 +114,11 @@ function pg_js ($js, $p)
    }
 }
 #_______________________________________________________________________________
-function pg_head ($css, $js)
+$PG = '';  ## ...i know i know
+
+function pg_head ($pgx, $css, $js)
 { global $PG, $nav;
+   $PG = $pgx;
    header ("set Access-Control-Allow-Origin '*'");
    $p = ($PG == '.') ? "" : "../";
    foreach ($nav as $n)  if ($PG == $n [1])  $ttl = $n [0];
@@ -191,13 +194,13 @@ function select ($id, $ls, $pik = '')
         " <option value='$val'" . (($val == $pik)?" SELECTED":"") .
           ">$lbl</option>\n";
    }
-   echo "</select>\n";
+   echo "</select>";
 }
 
 function check ($id, $lbl, $on = '')
 {  echo "<input id='$id' name='$id' type='checkbox'" .
-                (($on=='Y')?" checked":"") . ">\n" .
-        "<label for='$id'>$lbl</label>\n";
+                (($on=='Y')?" checked":"") . ">" .
+        "<label for='$id'>$lbl</label>";
 }
 
 function table ($id, $hdr, $row)
@@ -213,7 +216,7 @@ function table ($id, $hdr, $row)
 " <tbody>\n";
    foreach ($row as $r => $ro) {
       echo
-"  <tr id='$id$r'>\n";
+"  <tr>\n";
       foreach ($ro as $c => $co)  echo
 "   <td>$co</td>\n";
       echo
@@ -221,7 +224,7 @@ function table ($id, $hdr, $row)
    }
    echo
 " </tbody>\n" .
-"</table>\n";
+"</table>";
 }
 
 function table1 ($id, $hdr, $row)
@@ -231,8 +234,8 @@ function table1 ($id, $hdr, $row)
 " <thead><tr><th><b>$hdr</b></th></tr></thead>\n" .
 " <tbody>\n";
    foreach ($row as $r => $ro)  echo
-"  <tr id='$id$r'><td title='$ro'>$ro</td></tr>\n";
+"  <tr><td title='$ro'>$ro</td></tr>\n";
    echo
 " </tbody>\n" .
-"</table>\n";
+"</table>";
 }
