@@ -71,7 +71,7 @@ function redo ()
         let fn = a[1];
         let cm = a[2];                 // thumbnail path here
         let t = (cm != '') ? ('title="' + cm + '" ') : '';
-         h += "<img onclick='big("+i+");' " + t +
+         h += "<img class='pic' onclick='big("+i+");' " + t +
                    'src="' + pThm + fn + '"' + ">\n";
       }
       h += "</center>";

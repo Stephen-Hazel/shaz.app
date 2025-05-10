@@ -5,7 +5,6 @@ require_once ("../_inc/app.php");
    $shuf = arg ('shuf','Y');
    $pick = [];
    foreach (explode (',', arg ('pick')) as $p)  if ($p != '')  $pick[] = $p;
-dump("shuf=$shuf", $pick);
 
 // doin a scoot?
    if (($sc = arg ('sc')) != '')  rename ("song/$sc", "song/_z");
@@ -14,7 +13,6 @@ dump("shuf=$shuf", $pick);
    $dir = [];
    foreach (LstDir ("song", 'd') as $d)  if ($d != '_z')  $dir[] = $d;
    sort ($dir);
-dump('dir',$dir);
 
 // build pl[] given picked dirs minus did[] (if shuffle)
    $pl = [];
@@ -23,7 +21,6 @@ dump('dir',$dir);
       $mp3 = LstDir ("song/$d", 'f');
       foreach ($mp3 as $fn)  if (! in_array ("$d/$fn", $did))  $pl[] = "$d/$fn";
    }
-dump('pl',$pl);
    if ((count ($pick) > 0) && (count ($pl) == 0)) {
       unlink ("did.txt");              // time ta kill did.txt
       header ("Location: index.php?shuf=".$shuf."&pick=".arg ('pick'));
@@ -42,7 +39,7 @@ td    { overflow: hidden; white-space: nowrap; max-width: 320px; }
 let PL = <?= json_encode ($pl); ?>;    // play list
 let Tk = 0, Au;                        // track we're on, audio element
 
-function pick ()
+function pick ()                       // get dir checkboxes into a string
 { let p = [];
    all ("[id^='chk']:checked").forEach (chk => { p.push (chk.id.substr (3)); });
    return p;
@@ -56,14 +53,12 @@ function redo (x = '')                 // get which dirs are picked n refresh
 
 function chk ()  {redo ();}
 
-function tk_ttl ()
-// clean up the song title of this track
+function tk_ttl ()                     // clean up the song title of this track
 { let s = PL [Tk];
    s = s.substr (s.indexOf ('/')+1);   // toss leading dir and .mp3
    s = s.substr (s, s.length-4);       // and my dumb _rhap
    if (s.substr (s.length-5, 5) == "_rhap")  s = s.substr (0, s.length-5);
    s = s.replace (/_/g, " ");
-dbg(s);
    return s;
 }
 
