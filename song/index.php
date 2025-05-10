@@ -83,7 +83,7 @@ function play (go = 'y')
 
    $('#info tbody tr').eq (Tk).css ("background-color", "#FFFF80;")
                               .get (0).scrollIntoView ({ behavior: 'smooth' });
-  let s = tk_ttl ();   s = s.replace (/ /g, "\r\n");
+  let s = tk_ttl ();   s = s.replace (/ /g, "\n");
    document.title = s;
    Au.src = 'song/' + PL [Tk];
    if (go == 'y')  Au.play ();
