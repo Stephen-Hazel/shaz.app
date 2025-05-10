@@ -71,7 +71,8 @@ function play (go = 'y')
 {  if ((pick ().length > 0) && (PL.length == 0))  redo ();
 
    $('#info tbody tr').eq (Tk).css ("background-color", "#FFFF80;")
-                              .get (0).scrollIntoView ();
+                              .get (0).scrollIntoView ({ behavior: 'smooth' });
+   document.title =   PL [Tk];
    Au.src = 'song/' + PL [Tk];
    if (go == 'y')  Au.play ();
 }
