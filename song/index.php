@@ -56,6 +56,17 @@ function redo (x = '')                 // get which dirs are picked n refresh
 
 function chk ()  {redo ();}
 
+function tk_ttl ()
+// clean up the song title of this track
+{ let s = PL [Tk];
+   s = s.substr (s.indexOf ('/')+1);   // toss leading dir and .mp3
+   s = s.substr (s, s.length-4);       // and my dumb _rhap
+   if (s.substr (s.length-5, 5) == "_rhap")  s = s.substr (0, s.length-5);
+   s = s.replace (/_/g, " ");
+dbg(s);
+   return s;
+}
+
 function hush (rmv = 'n')
 {  Au.pause ();
    if (rmv != 'r')                          // just unhilite
@@ -72,7 +83,8 @@ function play (go = 'y')
 
    $('#info tbody tr').eq (Tk).css ("background-color", "#FFFF80;")
                               .get (0).scrollIntoView ({ behavior: 'smooth' });
-   document.title =   PL [Tk];
+  let s = tk_ttl ();   s = s.replace (/ /g, "\r\n");
+   document.title = s;
    Au.src = 'song/' + PL [Tk];
    if (go == 'y')  Au.play ();
 }
@@ -84,11 +96,7 @@ function next ()
 {  hush ();   Tk = (Tk == PL.length-1) ? 0   : (Tk+1);   play ();  }
 
 function lyr ()                        // hit google lookin fo lyrics
-{ let s = PL [Tk];
-   s = s.substr (s.indexOf ('/')+1);   // toss leading dir and .mp3
-   s = s.substr (s, s.length-4);       // and my dumb _rhap
-   if (s.substr (s.length-5, 5) == "_rhap")  s = s.substr (0, s.length-5);
-   s = s.replace (/_/g, " ");
+{ let s = tk_ttl ();
    window.open ("https://google.com/search?q=lyrics " + s, "_blank");
 }
 
