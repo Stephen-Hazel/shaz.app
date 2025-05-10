@@ -2,8 +2,7 @@
 
 require_once ("../_inc/app.php");
 
-   $PG = "me";
-   pg_head ("jqui app", "jqui app");
+   pg_head ("me", "jqui app", "jqui app");
 ?>
  <script>
 $(function () {

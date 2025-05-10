@@ -2,8 +2,8 @@
 
 require_once ("_inc/app.php");
 
-   $PG = '.';  # home
-   pg_head ("jqui app",  "jqui jquery.jrumble app");
+## home
+   pg_head (".", "jqui app",  "jqui jquery.jrumble app");
 ?>
  <script>
 function jRum (id, ix, iy, irot)

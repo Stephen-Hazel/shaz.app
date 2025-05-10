@@ -25,8 +25,7 @@ dump('index',$_REQUEST);
    $Pic = explode ("\n", Get ("idx/$fStr/$sStr.txt"));
 #dump("pic:", $Pic);
 
-   $PG = "pic";
-   pg_head ("jqui app", "jqui app");
+   pg_head ("pic", "jqui app", "jqui app");
 ?>
  <style>
 .comment {
