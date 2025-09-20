@@ -71,6 +71,7 @@ function hush (rmv = 'n')
       $.get ("did.php", { did: PL [Tk] });  // throw it into did.txt
       PL.splice (Tk, 1);                    // < outa PL n table
       $('#info tbody tr').eq (Tk).remove ();
+      $('#info thead tr th b').html (PL.length + " songs");
    }
 }
 
