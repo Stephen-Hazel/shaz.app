@@ -2,7 +2,7 @@
 
 require_once ("../_inc/app.php");
 
-dump('index',$_REQUEST);
+#dump('index',$_REQUEST);
    $f = arg ('f', '');
    $s = arg ('s', '');
 #dbg("f=$f s=$s");
@@ -27,6 +27,12 @@ dump('index',$_REQUEST);
 
    pg_head ("pic", "jqui app", "jqui app");
 ?>
+ <meta property="og:type"  content="website">
+ <meta property="og:url"   content="https://shaz.app/pic/index.php<?=
+                                   "?f=$f&s=$s" ?>">
+ <meta property="og:title" content="Stevez pics <?= $fStr.' '.$sStr ?>">
+ <meta property="og:image" content="https://shaz.app/pic/idx/<?=
+                                   "$fStr/$sStr/".explode ('|',$Pic[0])[1] ?>">
  <style>
 .comment {
    max-width: 640px;
@@ -41,6 +47,7 @@ dump('index',$_REQUEST);
 const path = "<?= "pic/$fStr/$sStr/" ?>";
 const pThm = "<?= "idx/$fStr/$sStr/" ?>";
 const pic  = <?= json_encode ($Pic) ?>;
+const parr = [];
 const pLen = pic.length;
 let   pPos = pLen;
 
@@ -53,80 +60,81 @@ function reArg (s)
 
 function reFold ()  { reArg (-1); }
 function rePSet ()  { let s = $('#pset').prop ('selectedIndex');   reArg (s);  }
+function prevSet () { let s = $('#pset').prop ('selectedIndex');   reArg (s-1);}
 function nextSet () { let s = $('#pset').prop ('selectedIndex');   reArg (s+1);}
 
-function big (p)  {pPos = p;   redo ();}
-
 function redo ()
+// thumbnails
 { let h = ''
-//dbg(document.fullscreenElement);
-   if (pPos == pLen) {                 // thumbnails
-      $('#info').html ('')
-      h += "<center>";
-//    if (pic [0] != '')
-//       h += "<div class='comment'>" +  + "</div>";
-      for (let i = 0;  i < pLen;  i++) {
-        let a = pic [i].split('|');
-        let pl = a[0];
-        let fn = a[1];
-        let cm = a[2];                 // thumbnail path here
-        let t = (cm != '') ? ('title="' + cm + '" ') : '';
-         h += "<img class='pic' onclick='big("+i+");' " + t +
-                   'src="' + pThm + fn + '"' + ">\n";
-      }
-      h += "</center>";
-   }
-   else {                              // full image
-     let a = pic [pPos].split ('|');
-     let pl = a[0];
+   $('#info').html ('')
+   h += "<center>";
+// if (pic [0] != '')
+//    h += "<div class='comment'>" +  + "</div>";
+   for (let i = 0;  i < pLen;  i++) {
+     let a = pic [i].split('|');
+//   let pl = a[0];
      let fn = a[1];
-     let cm = a[2];
-     let or = screen.orientation.type.substr (0,4);
-     let st = (or == 'land') ? 'height:94vh' : 'width:100vw';
-      $('#info').html ((pPos+1) + ' of ' + pLen)
-      h +=    "<center>";
-      if (cm != '')  h += "<div class='comment'>" + cm + "</div>";
-      h +=    "<img id='big' onclick='next();' style='" + st + "' " +
-                   'src="' + path + fn + '"' + ">\n" +
-              "</center>\n";
+     let cm = a[2];                 // thumbnail path here
+     let t = (cm != '') ? ('title="' + cm + '" ') : '';
+      h += "<img class='pic' onclick='big("+i+");' " + t +
+                'src="' + pThm + fn + '"' + ">\n";
    }
+   h += "</center>";
    $('#redo').html (h);
 }
 
-function grid ()  {pPos = pLen;   redo ();}
+function full ()
+{
+   document.querySelector ('#big').requestFullscreen ();
+   if (document.fullscreenElement)  document.exitFullscreen ();
+}
 
-function back ()  {pPos = (pPos == 0) ? pLen-1 : pPos-1;   redo ();}
-function next ()  {pPos = (pPos == pLen-1) ? 0 : pPos+1;   redo ();}
+function un ()  {$("#info").html ('');}
 
-function full ()  {document.querySelector ('#big').requestFullscreen ();}
-// if (document.fullscreenElement)  document.exitFullscreen ();
-
+function big (p)
+{  for (let i = 0;  i < pLen;  i++) {
+   // preload full pics
+     let a = pic [i].split('|');
+     let fn = a[1];
+      parr [i] = new Image ();
+      parr [i].src = path+fn;
+   }
+  let h = '';
+  let a = pic [p].split ('|');
+  let fn = a[1];
+  let cm = a[2];
+  let or = screen.orientation.type.substr (0,4);
+  let st = (or == 'land') ? 'height:94vh' : 'width:100vw';
+   h +=    "<center>";
+   h +=    "<img id='big' onclick='full(); un();' style='" + st + "' " +
+                'src="' + path + fn + '"' + ">\n" +
+           "</center>\n";
+   $("#info").html (h);
+   full ();
+}
 
 $(function () {
    navInit ();
    $('a').button ();
    $('#fold').selectmenu ({ change: reFold, width: 140});
    $('#pset').selectmenu ({ change: rePSet, width: 320});
+   $('#prevset').button ().click (prevSet);
    $('#nextset').button ().click (nextSet);
-   $('#grid').button ().click (grid);
-   $('#back').button ().click (back);
-   $('#next').button ().click (next);
-   $('#full').button ().click (full);
    redo ();
 });
  </script>
 <? pg_body (); ?>
 
  <span>
-<? select ('fold', $Fold, $fStr); ?>
-<? select ('pset', $PSet, $sStr);
-  if ($sPos+1 < count ($PSet)) { ?>
-  <button id='nextset' title='next set of pics'>NextSet</button> &nbsp; &nbsp;
+<? select ('fold', $Fold, $fStr);
+   select ('pset', $PSet, $sStr);
+   if ($sPos > 0) { ?>
+  <button id='prevset' title='previous set of pics'>PrevSet</button>
+<? }
+   if ($sPos+1 < count ($PSet)) { ?>
+  <button id='nextset' title='next set of pics'>NextSet</button>
 <? } ?>
-  <button id='grid' title='thumbnails'>Grid</button> &nbsp; &nbsp;
-  <button id='back' title='prev pic'  >&lt;</button>
-  <button id='next' title='next pic'  >&gt;</button>
-  <button id='full'>FullScreen</button>
+  &nbsp; &nbsp;
   <span id='info' style='font-size:16pt'></span>
  </span>
  <div id='redo'></div>

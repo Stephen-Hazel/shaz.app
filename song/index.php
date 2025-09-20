@@ -7,7 +7,8 @@ require_once ("../_inc/app.php");
    foreach (explode (',', arg ('pick')) as $p)  if ($p != '')  $pick[] = $p;
 
 // doin a scoot?
-   if (($sc = arg ('sc')) != '')  rename ("song/$sc", "song/_z");
+   if (($fr = arg ('sc')) != '')       // $to needs from dir chopped off
+      {$to = substr ($fr, 3);   rename ("song/$fr", "song/_z/$to");}
 
 // build dir[] from song dirs minus _z
    $dir = [];

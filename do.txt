@@ -1,0 +1,5 @@
+pic slideshow !
+   check why portrait is weird
+   some buttons shouldn't show sometimes n stuff
+song table should size better
+   and show full song string
