@@ -1,5 +1,9 @@
-pic slideshow !
-   check why portrait is weird
+song
+   seems to be a bug somewhere (maybe causin the disconnects?)
+   at end of song, #rows doesn't refresh
+   show full song string
+   table should size better
+pic
    some buttons shouldn't show sometimes n stuff
-song table should size better
-   and show full song string
+   check why portrait is weird
+   slideshow ?
