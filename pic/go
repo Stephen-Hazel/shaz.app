@@ -38,11 +38,13 @@ echo "   $s\n";
 echo "      got\n";
          continue;                          // it's fine as iz
       }
-      if (Got (  "$Idx/$y/new_$s.txt")) {   // wanna rethumb cuz PL or del'd
+
+   // wanna rethumb if  idx/y/new_set.txt  cuz P/L change or del'd, etc
+      if (Got (  "$Idx/$y/new_$s.txt")) {
          rename ("$Idx/$y/new_$s.txt", "$Idx/$y/$s.txt");
 echo "      rethumb\n";
       }
-      else {                                // make one fresh
+      else {                                // make fresh idx/y/set.txt
 echo "      makin\n";
          $fLst = LstDir ("$Top/$y/$s", 'f');
          sort ($fLst);
@@ -53,12 +55,14 @@ echo "      makin\n";
             if ($w > $h)  $LP = 'L';   else $LP = 'P';
             $idx[] = "$LP|$f|";
          }
-         Put ("$Idx/$y/$s.txt", implode ("\n", $idx));
+         Put ("$Idx/$y/$s.txt", implode ("\n", $idx) . "\n");
       }
 
-      system ('rm "'."$Idx/$y/$s/*".'"');
+      system ('rm -f "'."$Idx/$y/$s/*".'"');
       foreach (explode ("\n", Get ("$Idx/$y/$s.txt")) as $x) {
-         list ($PL, $f, $cm) = explode ('|', $x);
+         if ($x == '')  continue;      // price of always \n term'd lines
+                                       // from text editors
+         list ($LP, $f, $cm) = explode ('|', $x);
          $i = "$Top/$y/$s/$f";
          $o = "$Idx/$y/$s/$f";
          if ($LP == 'L')
