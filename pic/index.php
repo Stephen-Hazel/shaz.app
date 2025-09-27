@@ -83,6 +83,7 @@ require_once ("../_inc/app.php");
    top:        0;
    left:       0;
    color:      white;
+   font-size:  24pt;
    background: rgb(0,0,0);
    background: rgba(0,0,0,.5);
    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
