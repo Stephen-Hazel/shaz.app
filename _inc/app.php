@@ -1,12 +1,13 @@
 <? # inc/app.php - common junk
 
 $nav = [
-   ["shaz.app", ".",    ""],
-   ["my pics",  "pic",  ""],
-   ["my songs", "song", ""],
-   ["bout me",  "me",   ""],
-   ["youtube",  "https://youtube.com/@SteveHazel", ""],
-   ["facebook", "https://www.facebook.com/profile.php?id=61573878782184", ""]
+   ["shaz.app", "."],
+   ["my apps",  "app"],
+   ["pics",     "pic"],
+   ["songs",    "song"],
+   ["videos",   "https://youtube.com/@SteveHazel"],
+   ["friends",  "https://www.facebook.com/stephen.hazel"],
+   ["meee",     "me"]
 ];
 #_______________________________________________________________________________
 function Got ($fn)  {return file_exists ($fn);}

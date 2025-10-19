@@ -43,3 +43,12 @@ function navInit ()
       if (hasAt (link, 'pop'))  link.target = "_blank";
    });
 }
+
+function jRum (id, ix, iy, irot)
+{  jQuery('#'+id).jrumble ({x: ix, y: iy, rotation: irot});
+   jQuery('#'+id).hover (
+      function () { jQuery(this).trigger ('startRumble'); },
+      function () { jQuery(this).trigger ('stopRumble' ); }
+   );
+}
+
