@@ -2,12 +2,6 @@ linux
    move it here from pianocheetah and really do it out
    video of SIMPLEST install and concerns
 
-song
-   seems to be a bug somewhere (maybe causin the disconnects?)
-   at end of song, #rows doesn't refresh
-   show full song string
-   table should size better
+song - keep header fixed during scroll
 
-pic
-   show comments better somehow
-   some kinda post to facebook thingo?
+pic - some kinda post to facebook thingo?
