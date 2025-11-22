@@ -1,48 +1,91 @@
 // app.js
+// less typin'  (sorry not sorry) :/
+let dbg = console.log.bind (console);
+function el  (s)  {return document.getElementById   (s);}
+function all (s)  {return document.querySelectorAll (s);}
+function hasAt (e,a)  {return e.hasAttribute (a);}
+function setAt (e,a,v)       {e.setAttribute (a, v);}
+function clrAt (e,a)      {e.removeAttribute (a);}
 
-var dbg = console.log.bind (console);  // js is so wordy n looong :/
-function el  (s)  {return document.getElementById   (s)}
-function all (s)  {return document.querySelectorAll (s)}
-function hasAt (e,a)  {return e.hasAttribute (a)}
-function setAt (e,a,v)       {e.setAttribute (a, v)}
-function clrAt (e,a)      {e.removeAttribute (a)}
+function navOpen ()  {$('#nav-open').hide ();   $('nav').show ();
+                      $('#nav-shut').show ();}
+function navShut ()  {$('#nav-open').show ();   $('nav').hide ();
+                      $('#nav-shut').hide ();}
 
-function mob ()  {hasAt (nav, 'inert')}
+let pMobl = 99  ;                      // force navUpd to kick on init
 
-function navUpd (e)
-{ const mob = e.matches
-   if (mob) {
-      setAt (nav, 'inert', '')
-      all ('.pic').forEach (i => {
-         setAt (i, 'width', '100vw')
-         clrAt (i, 'height')
-      })
-   }
-   else {
-      clrAt (nav, 'inert')
-      all ('.pic').forEach (i => {
-         clrAt (i, 'width')
-         setAt (i, 'height', '80vh')
-      })
+function mobl ()  {return pMobl;}
+
+function navUpd ()
+{ let m = ($(window).width () < 700);
+   if (pMobl != m) {
+      $('body').removeClass (    'mobl     dtop');
+      $('body'   ).addClass (m ? 'mobl' : 'dtop');
+
+      if ($('nav li').length == 1) {   // only a ^home so SUUUper simple
+         $('nav').css ({'position': 'static',
+                        'display':  'inline'});
+         $('nav ul'   ).css ('display', 'inline');
+         $('nav ul li').css ('display', 'inline');
+      }
+      else {
+         $('nav').css ({'position': 'fixed',
+                        'display':  'block'});
+         $('nav ul'   ).css ('display', 'flex');
+         $('nav ul li').css ('display', 'flex');
+         if (m)  navShut ();
+         else   {navOpen ();   $('#nav-shut').hide ();}
+      }
+      pMobl = m;
    }
 }
-
-function navOpen ()  {nav.classList.add    ('show');   clrAt (nav, 'inert')    }
-function navShut ()  {nav.classList.remove ('show');   setAt (nav, 'inert', '')}
 
 function navInit ()
-{  nav = el ('navbar')
-   window.matchMedia ("(width < 700px)").addEventListener (
-                                            'change', (e) => navUpd (e))
-   all ('nav a').forEach (link => {    // for #bookmark links
-      link.addEventListener ('click', () => { navShut () })
-   })
+{  navUpd ();   $(window).resize (navUpd);
+   $('#nav-open').button ().click (navOpen);
+   $('#nav-shut'          ).click (navShut);
+}
 
-// make all links with pop=''  into target="_blank"
-   all ('a').forEach (link => {
-      if (hasAt (link, 'pop'))  link.target = "_blank";
+function jRum (id, ix, iy, irot)       // sorry i like ittt
+{  $('#'+id).jrumble ({x: ix, y: iy, rotation: irot});
+   $('#'+id).hover (function () { $(this).trigger ('startRumble'); },
+                    function () { $(this).trigger ('stopRumble' ); }
+   );
+}
+
+function aPop ()  // any a with pop attribute gets target='_blank'
+{  $("a").each (function (ind, ele) {
+      if ($(this).attr ('pop') !== undefined)
+         $(this).attr ('target', '_blank');
    });
 }
+
+function aBtn ()  // all a with btn attribute become jqui buttons
+{  $("a").each (function (ind, ele) {
+      if ($(this).attr ('btn') !== undefined)
+         $(this).button ();
+   });
+}
+
+function home ()  // home page init w crazy jRumble, diff button setup
+{  aPop ();
+   aBtn ();
+   $('#nav-open').button ();
+   $('nav ul a').button ();
+   navInit ();
+//   $('#menubtn').button ({event: "click hoverintent"});
+   jRum ('logo', 10, 10, 4);
+   jRum ('free',  2,  0, 0);
+   jRum ('me',    0,  2, 0);
+   jRum ('feel',  5,  5, 3);
+}
+
+function init ()  // for subpages
+{  aPop ();
+   $("a").button ();  // all a become buttons
+   navInit ();
+}
+
 
 function jRum (id, ix, iy, irot)
 {  jQuery('#'+id).jrumble ({x: ix, y: iy, rotation: irot});
@@ -52,3 +95,49 @@ function jRum (id, ix, iy, irot)
    );
 }
 
+$.event.special.hoverintent = {
+   setup:    function () {
+      $(this).bind   ("mouseover", jQuery.event.special.hoverintent.handler);
+   },
+   teardown: function () {
+      $(this).unbind ("mouseover", jQuery.event.special.hoverintent.handler);
+   },
+   handler: function (event) {
+     let currentX, currentY, timeout,
+         args = arguments,
+         target = $(event.target),
+         previousX = event.pageX,
+         previousY = event.pageY;
+      function track (event) {
+         currentX = event.pageX;
+         currentY = event.pageY;
+      };
+      function clear () {
+         target.unbind ("mousemove", track).unbind ("mouseout", clear);
+         clearTimeout (timeout);
+      }
+      function handler () {
+        let prop,
+            orig = event;
+         if ((Math.abs (previousX - currentX) +
+              Math.abs (previousY - currentY)) < 7) {
+            clear ();
+            event = $.Event ("hoverintent");
+            for (prop in orig)
+               if (! (prop in event))  event [prop] = orig [prop];
+         // Prevent accessing the original event since the new event
+         // is fired asynchronously and the old event is no longer
+         // usable (#6028)
+            delete event.originalEvent;
+            target.trigger (event);
+         }
+         else {
+            previousX = currentX;
+            previousY = currentY;
+            timeout = setTimeout (handler, 100);
+         }
+      }
+      timeout = setTimeout (handler, 100);
+      target.bind ({ mousemove: track, mouseout: clear });
+   }
+};

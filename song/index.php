@@ -6,125 +6,176 @@ require_once ("../_inc/app.php");
    $pick = [];
    foreach (explode (',', arg ('pick')) as $p)  if ($p != '')  $pick[] = $p;
 
-// doin a scoot?
-   if (($fr = arg ('sc')) != '')       // $to needs from dir chopped off
+## doin a scoot?
+   if (($fr = arg ('sc')) != '')       ## $to needs from dir chopped off
       {$to = substr ($fr, 3);   rename ("song/$fr", "song/_z/$to");}
 
-// build dir[] from song dirs minus _z
+## build dir[] from song dirs minus _z,__misc
    $dir = [];
-   foreach (LstDir ("song", 'd') as $d)  if ($d != '_z')  $dir[] = $d;
+   foreach (LstDir ("song", 'd') as $d)  if (! in_array ($d, ['_z','__misc']))
+      $dir[] = $d;
    sort ($dir);
 
-// build pl[] given picked dirs minus did[] (if shuffle)
+## build pl[] given picked dirs minus did[] (if shuffle)
    $pl = [];
    $did = ($shuf == 'N') ? [] : explode ("\n", Get ("did.txt"));
    foreach ($dir as $i => $d)  if (in_array ($i, $pick)) {
       $mp3 = LstDir ("song/$d", 'f');
-      foreach ($mp3 as $fn)  if (! in_array ("$d/$fn", $did))  $pl[] = "$d/$fn";
+      foreach ($mp3 as $fn)  if (! in_array ("$d/$fn", $did))
+         $pl[] = "$d/$fn";
    }
    if ((count ($pick) > 0) && (count ($pl) == 0)) {
-      unlink ("did.txt");              // time ta kill did.txt
-      header ("Location: index.php?shuf=".$shuf."&pick=".arg ('pick'));
+      unlink ("did.txt");              ## time ta kill did.txt
+      header ("Location: ?shuf=".$shuf."&pick=".arg ('pick'));
    }
-   if ($shuf == 'Y') shuffle ($pl);   else sort ($pl);
+   if ($shuf == 'Y')  shuffle ($pl);
+   else {                              ## ^chop rows if shuffle
+      usort ($pl, function ($a, $b) {  ## skip dir name in sort
+         $a1 = substr ($a, strpos ($a, '/')+1);
+         $b1 = substr ($b, strpos ($b, '/')+1);
+         if ($a1 == $b1)  return 0;
+         return ($a1 < $b1) ? -1 : 1;
+      });
+   }
+   $nm = [];
+   foreach ($pl as $i => $s) {         ## pretty up the name
+      $d = substr ($s, 0, strpos ($s, '/'));
+      $s = substr ($s, strlen ($d)+1);      ## toss leading dir/
+      if (count ($pick) == 1) $d = '';      ## no need for dir if only 1
+      $s = substr ($s, 0, -4);              ## toss .mp3
+      $s = str_replace ('_', ' ', $s);      ## _ => space
+      $f = strpos  ($s, '-');
+      $l = strrpos ($s, '-');
+      if ($f !== false) {                   ## l musta been set too
+         $g = substr ($s, 0, $f);           ## but they shouldn't be the same!
+         $t = substr ($s, $l+1);            ## TODO
+         $x = ($f == $l) ? '' : substr ($s, $f+1, $l-$f-1);
+         if ($d != '')  $d .= '|';
+         $s = "$t|$d$g|$x\t$g\n$x\n$t\n".(($d=='')?'':substr($d,0,-1));
+      }
+      else {
+#dbg($s);
+         $s = "?? $s $d";
+      }
+      $nm[] = $s;
+   }
 
    pg_head ("song", "jqui app", "jqui app");
 ?>
  <style>
-audio { vertical-align: middle; }
-table { max-width: 100%; border-collapse: collapse; }
-tbody { display: block; height: 20em; overflow-y: scroll; }
-td    { overflow: hidden; white-space: nowrap; max-width: 320px; }
+   body.dtop main {
+      display: inline;
+      width: 100%;
+      margin: 0;
+   }
+   table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+   }
+   th,td {
+      white-space: nowrap;
+      overflow: hidden;
+   }
  </style>
  <script> // ___________________________________________________________________
-let PL = <?= json_encode ($pl); ?>;    // play list
-let Tk = 0, Au;                        // track we're on, audio element
+let PL = <?= json_encode ($pl); ?>;    // play list array
+let Nm = <?= json_encode ($nm); ?>;    // prettier names group|title|etc
+let Tk = 0,  Au;                       // pos of track we're on, audio element
 
-function pick ()                       // get dir checkboxes into a string
+function shuf ()  {return $('#shuf').is (':checked') ? 'Y':'N';}
+
+function pick ()                       // get checkboxed dirs into an array
 { let p = [];
-   all ("[id^='chk']:checked").forEach (chk => { p.push (chk.id.substr (3)); });
+   $("[id^='chk']:checked").each (function () {
+      p.push ($(this).attr ('id').substr (3));
+   });
    return p;
 }
 
 function redo (x = '')                 // get which dirs are picked n refresh
-{ const s = $('#shuf').prop ('checked') ? 'Y':'N';
-  const p = pick ();
-   window.location = "index.php?shuf=" + s + "&pick=" + p.join (',') + x;
+{  window.location = "?shuf=" + shuf () +
+                     "&pick=" + pick ().join (',')  +  x;
 }
 
-function chk ()  {redo ();}
+function chk ()  {redo ();}            // checkbox clicked - redo (w no args)
 
-function tk_ttl ()                     // clean up the song title of this track
-{ let s = PL [Tk];
-   s = s.substr (s.indexOf ('/')+1);   // toss leading dir and .mp3
-   s = s.substr (s, s.length-4);       // and my dumb _rhap
-   if (s.substr (s.length-5, 5) == "_rhap")  s = s.substr (0, s.length-5);
-   s = s.replace (/_/g, " ");
-   return s;
-}
 
-function hush (rmv = 'n')
-{  Au.pause ();
-   if (rmv != 'r')                          // just unhilite
-      $('#info tbody tr').eq (Tk).css ("background-color", "");
+function next (newtr = -1)
+{ let sh = shuf ();
+   Au.pause ();                        // shush
+   $('#info tbody tr').eq (Tk).css ("background-color", "");    // unhilite
+   if (newtr != -1)  Tk = newtr;
    else {
-      $.get ("did.php", { did: PL [Tk] });  // throw it into did.txt
-      PL.splice (Tk, 1);                    // < outa PL n table
-      $('#info tbody tr').eq (Tk).remove ();
-      $('#info thead tr th b').html (PL.length + " songs");
-   }
+   // this guy is dooone - mark it
+      $.get ("did.php", { did: PL [Tk] });
+
+   // n outa pl,table if shuf
+      if (sh == 'Y') {
+         PL.splice (Tk, 1);
+         Nm.splice (Tk, 1);
+         $('#info tbody tr').eq (Tk).remove ();
+         $('#info thead tr th b').html (PL.length + " songs");
+      }
+
+   // end of list?  restart (completely redo if shuf n empty)
+      if (Tk >= PL.length) {
+         Tk = 0;
+         if ((sh == 'Y') && (PL.length == 0))  redo ();
+      }
+   }                                   // restart at 0 n refresh if shuf
+   play ('y');
 }
 
 function play (go = 'y')
-{  if ((pick ().length > 0) && (PL.length == 0))  redo ();
+{  if ((pick ().length > 0) && (PL.length == 0))  redo (); // outa songs!
+   if (Tk >= PL.length)  return;
 
+   document.title = Nm [Tk];
    $('#info tbody tr').eq (Tk).css ("background-color", "#FFFF80;")
                               .get (0).scrollIntoView ({ behavior: 'smooth' });
-  let s = tk_ttl ();   s = s.replace (/ /g, "\n");
-   document.title = s;
    Au.src = 'song/' + PL [Tk];
    if (go == 'y')  Au.play ();
 }
 
-function prev ()
-{  hush ();   Tk = (Tk == 0) ? (PL.length-1) : (Tk-1);   play ();  }
-
-function next ()
-{  hush ();   Tk = (Tk == PL.length-1) ? 0   : (Tk+1);   play ();  }
-
 function lyr ()                        // hit google lookin fo lyrics
-{ let s = tk_ttl ();
-   window.open ("https://google.com/search?q=lyrics " + s, "_blank");
+{  if (Tk >= PL.length)  return;
+   window.open (
+      'https://google.com/search?q=lyrics for "' + Nm [Tk] + '"', "_blank");
 }
 
 function scoot ()  { redo ('&sc=' + PL [Tk]); }
 
 $(function () {                        // boot da page
-   navInit ();   $('a').button ();
+   init ();
 
    Au = el ('audio');
-// Au.volume = 0.2;
+   if (! mobl ())  Au.volume = 0.2;    // desktop shouldn't have max volume :/
 
    $('input' ).checkboxradio ().click (chk);
-   $('#prev' ).button ().click (prev);
-   $('#next' ).button ().click (next);
    $('#scoot').button ().click (scoot);
    $('#lyr'  ).button ().click (lyr);
    $('#info tbody').on ('click', 'tr', function () {
-      hush ();   Tk = $(this).index ();   play ();
-   });
-   Au.addEventListener ('ended', () => { hush ('r');   play (); });
+                                         next ($(this).index ());
+                                       });
+   Au.addEventListener ('ended', () => { next (); });
    play ('n');  // setup audio but can't aaactually play till click
 });
  </script>
-<? pg_body ();
-   check ('shuf', 'shuf', $shuf);
-   foreach ($dir as $i => $s)  check ("chk$i", $s, in_array ($i, $pick)?'Y':'');
-?>
-<br>
-<audio id="audio" controls></audio>
-<a id='prev'>&lt;</a><a id='next'>&gt;</a>
-<a id='scoot'>scoot</a><a id='lyr'>lyric</a>
+<? pg_body ([
+      [$UC['ar-lftup']."home",  "..",  "...take me back hooome"],
+   ]); ?><audio id="audio" controls></audio>
+<? check ('shuf', 'shuf', $shuf); ?> <a id='scoot'>skip</a>
+                                     <a id='lyr'>lyric</a> --
+<? foreach ($dir as $i => $s)
+      check ("chk$i", $s, in_array ($i, $pick) ? 'Y':''); ?><br>
 
-<? table1 ('info', count ($pl)." songs", $pl); ?>
+<? $n2 = [];
+   foreach ($nm as $n) {
+      $b = strpos ($n, '|');
+      if ($b !== false)  $n = "<b>" . substr ($n, 0, $b) .
+                             "</b>" . substr ($n, $b);
+      $n2[] = $n;
+   }
+   table1 ('info', count ($nm)." songs", $n2); ?>
 <? pg_foot ();

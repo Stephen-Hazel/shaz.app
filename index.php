@@ -2,19 +2,20 @@
 
 require_once ("_inc/app.php");
 
-## home
-   pg_head (".", "jqui app",  "jqui jquery.jrumble app");
+   pg_head ("shaz.app", "jqui app",  "jqui app", "home");
 ?>
  <script>
-$(function () {
-   navInit ();
-   $('a').button ();
-});
+   $(function () {init ();});
  </script>
-<? pg_body (); ?>
-<center>
- <br><h1>Welp, here's a buncha junk Steve did.  And stuff.</h1><br>
- <img id='wy' class='pic' src="_img/wilee.jpg">
-</center>
-
+<? pg_body ([
+      ["apps",     "app",  "apps i wrote n stuff"],
+      ["pics",     "pic",  "all ma pics"],
+      ["songs",    "song", "songs (Annie n) i dig"],
+      ["videos",   "https://www.facebook.com/stephen.hazel",  "videos i took"],
+      ["meee",     "me",   "bout Steve"],
+      ["linux",    "https://pianocheetah.app/linux",     "linux - my thoughts"],
+      ["facebook", "https://www.facebook.com/stephen.hazel",  "der"]
+   ]); ?>
+ <h1>Buncha junk Steve did.  And stuff.</h1><br>
+ <img src="img/wilee.jpg">
 <? pg_foot ();
