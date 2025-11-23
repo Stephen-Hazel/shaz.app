@@ -167,7 +167,7 @@ $(function () {                        // boot da page
  </script>
 <? pg_body ([
       [$UC['ar-lftup']."home",  "..",  "...take me back hooome"],
-   ], "<audio controls></audio>"); ?>
+   ]); ?> <audio controls></audio>
 <? check ('shuf', 'shuf', $shuf); ?> <a id='scoot'>skip</a>
                                      <a id='lyr'>lyric</a>
 <? foreach ($dir as $i => $s)
