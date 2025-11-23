@@ -157,7 +157,7 @@ function pg_head ($ttl, $css, $js, $h = '')      ## html head title css js
    pg_js ($js, $pre);
 }
 #_______________________________________________________________________________
-function pg_body ($nav)                ## /head body nav /nav main
+function pg_body ($nav, $x = '')       ## /head body nav /nav main
 { global $UC; ?>
 </head>
 <body>
@@ -175,7 +175,7 @@ function pg_body ($nav)                ## /head body nav /nav main
                                                                "$tt</a></li>\n";
    }
 ?>
-</ul></nav>
+</ul><?= $x ?></nav>
 <main>
 <?
 }

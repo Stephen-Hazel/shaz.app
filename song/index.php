@@ -121,6 +121,8 @@ function next (newtr = -1)
    // end of list?  restart (completely redo if shuf n empty)
       if (Tk >= PL.length) {
          Tk = 0;
+         $('#info tbody tr').eq (Tk).get (0)
+                                    .scrollIntoView ({ behavior: 'smooth' });
          if ((sh == 'Y') && (PL.length == 0))  redo ();
       }
    }                                   // restart at 0 n refresh if shuf
@@ -132,8 +134,7 @@ function play (go = 'y')
    if (Tk >= PL.length)  return;
 
    document.title = Nm [Tk];
-   $('#info tbody tr').eq (Tk).css ("background-color", "#FFFF80;")
-                              .get (0).scrollIntoView ({ behavior: 'smooth' });
+   $('#info tbody tr').eq (Tk).css ("background-color", "#FFFF80;");
    Au.src = 'song/' + PL [Tk];
    if (go == 'y')  Au.play ();
 }
@@ -149,9 +150,11 @@ function scoot ()  { redo ('&sc=' + PL [Tk]); }
 $(function () {                        // boot da page
    init ();
 
-   Au = el ('audio');
-   if (! mobl ())  Au.volume = 0.2;    // desktop shouldn't have max volume :/
-
+   Au = tag ('audio');
+   if (! mobl ()) {
+      Au.volume = 0.2;                 // desktop shouldn't have max volume :/
+      $('.mobl').hide ();
+   }
    $('input' ).checkboxradio ().click (chk);
    $('#scoot').button ().click (scoot);
    $('#lyr'  ).button ().click (lyr);
@@ -164,9 +167,9 @@ $(function () {                        // boot da page
  </script>
 <? pg_body ([
       [$UC['ar-lftup']."home",  "..",  "...take me back hooome"],
-   ]); ?><audio id="audio" controls></audio>
+   ], "<audio controls></audio>"); ?>
 <? check ('shuf', 'shuf', $shuf); ?> <a id='scoot'>skip</a>
-                                     <a id='lyr'>lyric</a> --
+                                     <a id='lyr'>lyric</a>
 <? foreach ($dir as $i => $s)
       check ("chk$i", $s, in_array ($i, $pick) ? 'Y':''); ?><br>
 

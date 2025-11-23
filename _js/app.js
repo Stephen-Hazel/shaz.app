@@ -2,6 +2,7 @@
 // less typin'  (sorry not sorry) :/
 let dbg = console.log.bind (console);
 function el  (s)  {return document.getElementById   (s);}
+function tag (s)  {return document.getElementsByTagName (s)[0];}
 function all (s)  {return document.querySelectorAll (s);}
 function hasAt (e,a)  {return e.hasAttribute (a);}
 function setAt (e,a,v)       {e.setAttribute (a, v);}
