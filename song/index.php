@@ -68,7 +68,7 @@ require_once ("../_inc/app.php");
       width: 100%;
       margin: 0;
    }
-   table {
+   body.mobl main table {
       width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
@@ -105,27 +105,26 @@ function next (newtr = -1)
 { let sh = shuf ();
    Au.pause ();                        // shush
    $('#info tbody tr').eq (Tk).css ("background-color", "");    // unhilite
-   if (newtr != -1)  Tk = newtr;
-   else {
-   // this guy is dooone - mark it
+   if (newtr != -1)  Tk = newtr;       // song got clicked on
+   else {                              // this guy is dooone - mark it
       $.get ("did.php", { did: PL [Tk] });
 
-   // n outa pl,table if shuf
-      if (sh == 'Y') {
+      if (sh == 'Y') {                 // take outa PL and table
          PL.splice (Tk, 1);
          Nm.splice (Tk, 1);
          $('#info tbody tr').eq (Tk).remove ();
          $('#info thead tr th b').html (PL.length + " songs");
       }
+      else
+         Tk++;                         // gotta bump pos for noshuf (all)
 
-   // end of list?  restart (completely redo if shuf n empty)
-      if (Tk >= PL.length) {
+      if (Tk >= PL.length) {           // end of list?  restart
          Tk = 0;
          $('#info tbody tr').eq (Tk).get (0)
                                     .scrollIntoView ({ behavior: 'smooth' });
          if ((sh == 'Y') && (PL.length == 0))  redo ();
-      }
-   }                                   // restart at 0 n refresh if shuf
+      }                                // completely redo if shuf n empty
+   }
    play ('y');
 }
 
@@ -141,8 +140,10 @@ function play (go = 'y')
 
 function lyr ()                        // hit google lookin fo lyrics
 {  if (Tk >= PL.length)  return;
+   a = Nm [Tk].split ('|');
+   tt = a [0];   gr = (a [1].length > 2) ? a [1] : a [2];
    window.open (
-      'https://google.com/search?q=lyrics for "' + Nm [Tk] + '"', "_blank");
+      'https://google.com/search?q=lyrics "'+tt+'" "'+gr+'"', "_blank");
 }
 
 function scoot ()  { redo ('&sc=' + PL [Tk]); }

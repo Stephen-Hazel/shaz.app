@@ -2,6 +2,9 @@ linux
    move it here from pianocheetah and really do it out
    video of SIMPLEST install and concerns
 
-song - keep header fixed during scroll
+song
+   keep header fixed during scroll
+   on desktop show group|etc|title (w title bold)
+   make a "list all and search for if i got it"
 
 pic - some kinda post to facebook thingo?
