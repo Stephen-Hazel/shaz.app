@@ -3,6 +3,8 @@ linux
    video of SIMPLEST install and concerns
 
 song
+   make did.php perfect - sep lists, check for all in this list n kill just it
+      fully test end of list, did, etc
    keep header fixed during scroll
    on desktop show group|etc|title (w title bold)
    make a "list all and search for if i got it"

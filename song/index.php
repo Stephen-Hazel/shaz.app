@@ -12,8 +12,7 @@ require_once ("../_inc/app.php");
 
 ## build dir[] from song dirs minus _z,__misc
    $dir = [];
-   foreach (LstDir ("song", 'd') as $d)  if (! in_array ($d, ['_z','__misc']))
-      $dir[] = $d;
+   foreach (LstDir ("song", 'd') as $d)  $dir[] = $d;
    sort ($dir);
 
 ## build pl[] given picked dirs minus did[] (if shuffle)
@@ -50,7 +49,9 @@ require_once ("../_inc/app.php");
          $g = substr ($s, 0, $f);           ## but they shouldn't be the same!
          $t = substr ($s, $l+1);            ## TODO
          $x = ($f == $l) ? '' : substr ($s, $f+1, $l-$f-1);
-         if ($d != '')  $d .= '|';
+#         if ($d != '')  $d = "|$d";
+#         $s = "$g|$x|$t$d\t$g\n$x\n$t\n".(($d=='')?'':substr($d,1));
+         if ($d != '')  $d .= "|";
          $s = "$t|$d$g|$x\t$g\n$x\n$t\n".(($d=='')?'':substr($d,0,-1));
       }
       else {
@@ -101,11 +102,13 @@ function redo (x = '')                 // get which dirs are picked n refresh
 function chk ()  {redo ();}            // checkbox clicked - redo (w no args)
 
 
-function next (newtr = -1)
+function next (newtk = -1)
 { let sh = shuf ();
    Au.pause ();                        // shush
    $('#info tbody tr').eq (Tk).css ("background-color", "");    // unhilite
-   if (newtr != -1)  Tk = newtr;       // song got clicked on
+   if (newtk == Tk)  return;           // shortcut to pause
+
+   if (newtk != -1)  Tk = newtk;       // song got clicked on
    else {                              // this guy is dooone - mark it
       $.get ("did.php", { did: PL [Tk] });
 
@@ -133,9 +136,11 @@ function play (go = 'y')
    if (Tk >= PL.length)  return;
 
    document.title = Nm [Tk];
-   $('#info tbody tr').eq (Tk).css ("background-color", "#FFFF80;");
    Au.src = 'song/' + PL [Tk];
-   if (go == 'y')  Au.play ();
+   if (go == 'y') {
+      Au.play ();
+      $('#info tbody tr').eq (Tk).css ("background-color", "#FFFF80;");
+   }
 }
 
 function lyr ()                        // hit google lookin fo lyrics
