@@ -213,20 +213,20 @@ function doc ($dir)
    $li  = 0;
    foreach ($aLn as $i => $ln) {
 #dbg("   $i \n$ln");
-   ## look for fmt`...` in line
+   ## look for `fmt`...` in line
       while (($p = strpos ($ln, '`'      )) !== false) {
          if (($b = strpos ($ln, '`', $p+1)) === false)  break;
          if (($e = strpos ($ln, '`', $b+1)) === false)  break;
 
          $pre = substr ($ln, 0, $p);
-         $x   = substr ($ln, $p+1, $b-$p-1);
+         $fmt = substr ($ln, $p+1, $b-$p-1);
          $mid = substr ($ln, $b+1, $e-$b-1);
          $suf = substr ($ln, $e+1);
-#dbg("p=$p b=$b e=$e pre='$pre' x='$x' mid='$mid' suf='$suf'");
+#dbg("p=$p b=$b e=$e pre='$pre' fmt='$fmt' mid='$mid' suf='$suf'");
          $cl = '';
-         if      ($x == 'b')  $tag = 'b';
-         else if ($x == 'i')  $tag = 'i';
-         else                {$tag = 'span';   $cl = " class='$x'";}
+         if      ($fmt == 'b')  $tag = 'b';
+         else if ($fmt == 'i')  $tag = 'i';
+         else                {$tag = 'span';   $cl = " class='$fmt'";}
 #dbg("tag=$tag cl=$cl");
          $ln = "$pre<$tag$cl>$mid</$tag>$suf";
 #dbg($ln);
@@ -239,6 +239,7 @@ function doc ($dir)
          $out .= "<div class='bul'>";
          $ln = substr ($ln, 3);   $li = 1;
       }
+
       $out .= $ln;
 
    ## end of list

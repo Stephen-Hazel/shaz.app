@@ -1,6 +1,4 @@
 list all files in a dir tree by modified datetime
-right click a dir and "open with" recent
+I was thinking this would be for a customized backup program.
 
-I was thinking to use this for a customized backup program.
-
-But now I'm probably just going to put (what little code there is here) into l
+But I'm probably just going to use l instead

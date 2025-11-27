@@ -1,6 +1,11 @@
 some file utilities and stuff
-`bg1`S`teve `bg1`Haz`el's soft`bg1`ware`
 <img style="float: right;" src="img/go.png">
+`bg1`S`teve `bg1`Haz`el's soft`bg1`ware`
+
+<a pop href="https://github.com/Stephen-Hazel/shazware">c++ source</a>
+<a pop href="https://github.com/Stephen-Hazel/stv">stv lib</a>
+<a pop href="https://raw.githubusercontent.com/Stephen-Hazel/shazware/refs/heads/main/do.txt">TODO</a>
+
  - `bg2`fp2sh` - flatpak commands in CLI without the long dumb suffixes
 
  - `bg3`big` - print out text in a big font (like in the mainframe days)

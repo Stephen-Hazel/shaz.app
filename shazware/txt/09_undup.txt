@@ -1,28 +1,28 @@
-UnDuplicate (delete duplicate files)
+UnDuplicate (kill dup files)
+There are a lot of midi files to download.
+And none of em have good names.
 
-I've got a ton of midi files I've scammed off various web spots.
-And -NONE- of em had nice clean names.
-They're either named AWESOMEMID.MID or else flying_in_a_blue_dream_by_joe.KAR...
-I want it named JoeSatriani_FlyingInABlueDream_lyr.mid
+awesome.mid and mysong.mid are actually the exact same file :(
 
-And then I come across the file again.
-This time it's named WAYCOOL.MID (didn't you love those 8.3 char DOS filenames?)
+UnDup will pop up your text editor with a listing of dup files within a dir tree
 
-I've got jillions of files!  How do I get rid of the duplicates???
 
-Welllllllll, UnDup of -COURSE-  (Durrrrr!)
+It tries to pick the file with the best filename and prefixes an
 
-right click a directory in windows explorer
+x next to the rest.
 
-UnDup will pop up notepad with the full listing of the dups
 
-It doesn't know which one of the 2+ files to keep, though.
 If it guesses wrong,
 
-- prefix an x (and space) to the one it picked.
+ - give the one picked an x prefix
 
-- delete the x by the file to keep
+ - remove the x prefixing the <b>good</b> filenae
 
 save !
 
-then click yes to actually kill em.  (or no to skip it)
+then click yes in undup.  Or no to skip the whole thing.
+
+undup will pop a list of what it's going to do.
+click yes again and it'll do it.
+
+don't mess up the lines !
