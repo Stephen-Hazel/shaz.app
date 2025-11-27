@@ -150,7 +150,7 @@ $(function () {
 });
  </script>
 <? pg_body ([
-      [$UC['ar-lftup']."home",  "..",  "...take me back hooome"],
+      [$UC['home']." home",  "..",  "...take me back hooome"],
    ]); ?>
 <span id='top'>
 <? select ('year', $Year, $yStr);

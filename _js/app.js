@@ -68,22 +68,10 @@ function aBtn ()  // all a with btn attribute become jqui buttons
    });
 }
 
-function home ()  // home page init w crazy jRumble, diff button setup
-{  aPop ();
-   aBtn ();
-   $('#nav-open').button ();
-   $('nav ul a').button ();
-   navInit ();
-//   $('#menubtn').button ({event: "click hoverintent"});
-   jRum ('logo', 10, 10, 4);
-   jRum ('free',  2,  0, 0);
-   jRum ('me',    0,  2, 0);
-   jRum ('feel',  5,  5, 3);
-}
-
 function init ()  // for subpages
 {  aPop ();
-   $("a").button ();  // all a become buttons
+   $("a").button ();                   // all a become buttons
+   $("[tip]").addClass ('tip');        // git all tags w tip= attrib class=tip
    navInit ();
 }
 

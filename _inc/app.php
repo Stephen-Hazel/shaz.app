@@ -1,14 +1,15 @@
 <? # _inc/app.php - common junk
 
-$ROOT = "pianocheetah.app";
-$DESC = "pianocheetah, software, piano, practice";
+$ROOT = "shaz.app";
+$DESC = "Steve HAZel's dang website";
 $UC = [
    "ar-lft"   => "&#9664;",
    "ar-rit"   => "&#9658;",
    "ar-up"    => "&#9650;",
    "ar-dn"    => "&#9660;",
-   "ar-lftup" => "&#9700;"
+   "home"     => "&#9700;"
 ];
+
 #_______________________________________________________________________________
 function Got ($fn)  {return file_exists ($fn);}
 function Get ($fn)  {return file_get_contents ($fn);}
@@ -191,7 +192,7 @@ function doc ($dir)
    $pg   = $pLst [$ipg];
    $ttl  = substr ($pg, 3, -4);
    $pTtl = [];
-   $nav = [ [$UC['ar-lftup']."home",  "..",  "...take me back hooome"] ];
+   $nav = [ [$UC['home']." home",  "..",  "...take me back hooome"] ];
    foreach ($pLst as $i => $fn) {
       $p = substr ($fn, 3, -4);
       $pTtl [$i] = Get1 ("txt/$fn");
@@ -251,12 +252,11 @@ function doc ($dir)
    }
 
 ## trail nav - link to next,home
-   $out .= "<br><center>\n";
+   $out .= "<br>\n";
    if ($ipg+1 < count ($pLst))  $out .=
-           "<a href='?pg=" . ($ipg+1) . "'>next ".$UC['ar-rit'].
+           "<a href='?pg=" . ($ipg+1) . "'>" . $UC['ar-rit'] . " next" .
            "</a> &nbsp; &nbsp; ";
-   $out .= "<a href='../'>".$UC['ar-lftup']." home</a>\n".
-           "</center>\n";
+   $out .= "<a href='../'>".$UC['home']." home</a>\n";
 
    echo "$out\n<br><br>\n";
    pg_foot ();

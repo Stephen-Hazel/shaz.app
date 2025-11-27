@@ -15,7 +15,7 @@ $(function () {
 });
  </script>
 <? pg_body ([
-      [$UC['ar-lftup']."home",  "..",  "...take me back hooome"],
+      [$UC['home']." home",  "..",  "...take me back hooome"],
    ]); ?>
 <a id='a' pop class='nav-1' href=
    'https://pianocheetah.app'
