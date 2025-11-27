@@ -1,3 +1,5 @@
+page previews should really only be for pic
+
 linux
    move it here from pianocheetah and really do it out
    video of SIMPLEST install and concerns

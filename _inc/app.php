@@ -157,7 +157,7 @@ function pg_head ($ttl, $css, $js, $h = '')      ## html head title css js
    pg_js ($js, $pre);
 }
 #_______________________________________________________________________________
-function pg_body ($nav, $x = '')       ## /head body nav /nav main
+function pg_body ($nav, $h = '')       ## /head body nav /nav main
 { global $UC; ?>
 </head>
 <body>
@@ -168,14 +168,14 @@ function pg_body ($nav, $x = '')       ## /head body nav /nav main
 <nav id='nav'><ul>
 <? foreach ($nav as $i => $n) {
       $tt = $n [0];   $ln = $n [1];   $tip = $n [2];
-      if ($tt == '')  {echo " <li style='padding: 3px'></li>\n";
-                       continue;}      ## lil gap between home n rest
       $pop = (substr ($ln,0,4) == "http") ? "pop" : "";
       echo " <li class='tip' tip=\"$tip\"><a $pop href='$ln' class='nav-$i'>" .
                                                                "$tt</a></li>\n";
+      if (($i == 0) && ($h == ''))     ## lil gap between home n rest
+         echo " <li style='padding: 3px'></li>\n";
    }
 ?>
-</ul><?= $x ?></nav>
+</ul></nav>
 <main>
 <?
 }
@@ -191,9 +191,7 @@ function doc ($dir)
    $pg   = $pLst [$ipg];
    $ttl  = substr ($pg, 3, -4);
    $pTtl = [];
-   $nav = [ [$UC['ar-lftup']."home",  "..",  "...take me back hooome"],
-            ['','','']                 ## lil gap
-          ];
+   $nav = [ [$UC['ar-lftup']."home",  "..",  "...take me back hooome"] ];
    foreach ($pLst as $i => $fn) {
       $p = substr ($fn, 3, -4);
       $pTtl [$i] = Get1 ("txt/$fn");
@@ -213,7 +211,25 @@ function doc ($dir)
    $out = "<h1>".$pTtl [$ipg]."</h1><br>\n";
    $li  = 0;
    foreach ($aLn as $i => $ln) {
-#dbg("   $i '$ln'");
+#dbg("   $i \n$ln");
+   ## look for fmt`...` in line
+      while (($p = strpos ($ln, '`'      )) !== false) {
+         if (($b = strpos ($ln, '`', $p+1)) === false)  break;
+         if (($e = strpos ($ln, '`', $b+1)) === false)  break;
+
+         $pre = substr ($ln, 0, $p);
+         $x   = substr ($ln, $p+1, $b-$p-1);
+         $mid = substr ($ln, $b+1, $e-$b-1);
+         $suf = substr ($ln, $e+1);
+#dbg("p=$p b=$b e=$e pre='$pre' x='$x' mid='$mid' suf='$suf'");
+         $cl = '';
+         if      ($x == 'b')  $tag = 'b';
+         else if ($x == 'i')  $tag = 'i';
+         else                {$tag = 'span';   $cl = " class='$x'";}
+#dbg("tag=$tag cl=$cl");
+         $ln = "$pre<$tag$cl>$mid</$tag>$suf";
+#dbg($ln);
+      }
 
    ## start list of bullets ?
       if ((strlen ($ln) > 3) && (substr ($ln, 0, 3) == " - ")) {
@@ -230,6 +246,7 @@ function doc ($dir)
    ## done w line n start next bullet?
       if ((($i+1) >= count($aLn)) || (substr ($aLn [$i+1], 0, 1) != ' '))
          $out .= "<br>";
+
       $out .= "\n";
    }
 

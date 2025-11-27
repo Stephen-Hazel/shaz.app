@@ -17,31 +17,31 @@ $(function () {
 <? pg_body ([
       [$UC['ar-lftup']."home",  "..",  "...take me back hooome"],
    ]); ?>
-<a id='a' pop class='nav-1'
-   href='https://pianocheetah.app'>pianocheetah</a><br>
-my baby.<br><br><br>
+<a id='a' pop class='nav-1' href=
+   'https://pianocheetah.app'
+  >pianocheetah</a><br>
+my baby<br><br><br>
 
-<a id='b' pop class='nav-2'
-   href='https://github.com/Stephen-Hazel/shazware'>shazware</a><br>
+<a id='b' pop class='nav-2' href=
+   '../shazware'
+  >shazware</a><br>
 <b>S</b>teve <b>HAZ</b>el's &nbsp; soft<b>WARE</b> -
-some file utilities i wrote for me.<br><br><br>
+some file utilities i wrote<br><br><br>
 
-<a id='c' pop class='nav-3'
-   href='https://github.com/Stephen-Hazel/stv'>stv lib</a><br>
-my common os,ui,midi,snd,syn,etc,etc library (not an app, just source)
+<a id='c' pop class='nav-3' href=
+   'https://github.com/Stephen-Hazel/stv'
+  >stv lib</a><br>
+my common os,ui,midi,snd,syn,etc,etc library (c++ source)
 <br><br><br>
 
-<a id='d' pop class='nav-4'
-   href='https://github.com/Stephen-Hazel/shaz.app'>shaz.app</a><br>
-shaz.app website junk (not an app, just html,etc)<br><br><br>
+<a id='d' pop class='nav-4' href=
+   'https://github.com/Stephen-Hazel/shaz.app'
+  >shaz.app</a><br>
+shaz.app website junk (html, css, js, php, jq)<br><br><br>
 
-<a id='e' pop class='nav-5'
-   href='https://github.com/Stephen-Hazel/pianocheetah.app'
+<a id='e' pop class='nav-5' href=
+   'https://github.com/Stephen-Hazel/pianocheetah.app'
   >pianocheetah.app</a><br>
-pianocheetah.app website junk (not an app, just html,etc)<br><br><br>
-
-<a pop class='nav-6'
-   href="SETUPSHAZWARE.exe">SETUPSHAZWARE.exe</a><br>
-my old windows version but you're on your own - i'm not goin back :(
+pianocheetah.app website junk (html, css, js, php, jq)<br><br><br>
 
 <? pg_foot ();
