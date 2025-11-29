@@ -23,7 +23,7 @@ function navUpd ()
       $('body').removeClass (    'mobl     dtop');
       $('body'   ).addClass (m ? 'mobl' : 'dtop');
 
-      if ($('nav li').length == 1) {   // only a ^home so SUUUper simple
+      if ($('nav li').length <= 1) {   // only a ^home so SUUUper simple
          $('nav').css ({'position': 'static',
                         'display':  'inline'});
          $('nav ul'   ).css ('display', 'inline');
